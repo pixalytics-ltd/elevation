@@ -54,7 +54,7 @@ For the SRTM 90m DEM use::
     $ eio --product SRTM3 clip -o Rome-90m-DEM.tif --bounds 12.35 41.8 12.65 42
 
 The ``--bounds`` option accepts latitude and longitude coordinates
-(more precisely in geodetic coordinates in the WGS84 refernce system EPSG:4326 for those who care)
+(more precisely in geodetic coordinates in the WGS84 reference system EPSG:4326 for those who care)
 given as ``left bottom right top`` similarly to the ``rio`` command form ``rasterio``.
 
 If you have installed the packages ``rasterio`` and ``fiona``
