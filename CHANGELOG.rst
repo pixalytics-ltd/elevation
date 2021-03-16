@@ -2,7 +2,8 @@
 1.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed SRTM3 downloads.
+  See `#44 <https://github.com/bopen/elevation/pull/44>`_.
 
 
 1.1.0 (2020-11-18)
