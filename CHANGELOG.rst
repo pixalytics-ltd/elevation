@@ -1,5 +1,5 @@
 
-1.1.2 (unreleased)
+1.1.2 (2021-03-16)
 ------------------
 
 - Fixed SRTM3 downloads.
