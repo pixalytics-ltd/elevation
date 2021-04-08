@@ -1,5 +1,5 @@
 
-1.1.3 (unreleased)
+1.1.3 (2021-04-08)
 ------------------
 
 - Move to ``setuptools_scm`` for version management.
