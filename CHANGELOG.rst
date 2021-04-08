@@ -2,7 +2,7 @@
 1.1.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Move to ``setuptools_scm`` for version management.
 
 
 1.1.2 (2021-03-16)

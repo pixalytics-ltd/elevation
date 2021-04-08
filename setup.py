@@ -26,16 +26,12 @@ def read(fname):
     return codecs.open(file_path, encoding='utf-8').read()
 
 
-version = '1.1.3.dev0'
-
 setup(
     name='elevation',
-    version=version,
     author='B-Open Solutions srl, Alessandro Amici',
     author_email='info@bopen.eu',
     license='Apache License Version 2.0',
     url='http://elevation.bopen.eu',
-    download_url='https://github.com/bopen/elevation/archive/%s.tar.gz' % version,
     description="Python script to download global terrain digital elevation models, "
     "SRTM 30m DEM and SRTM 90m DEM.",
     long_description=read('README.rst'),
