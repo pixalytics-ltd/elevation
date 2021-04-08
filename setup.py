@@ -38,7 +38,7 @@ setup(
     long_description_content_type="text/x-rst",
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['appdirs', 'click<7.0', 'fasteners'],
+    install_requires=['appdirs', 'click', 'fasteners'],
     extras_require={'reference': ['fiona', 'rasterio']},
     zip_safe=True,
     classifiers=[
@@ -50,6 +50,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: Implementation :: CPython',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: Apache Software License',
