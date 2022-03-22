@@ -73,7 +73,8 @@ def srtm3_tiles_names(left, bottom, right, top, tile_template='srtm_{ilon:02d}_{
     iright, ibottom = srtm3_tile_ilonlat(right, bottom)
     for ilon in range(ileft, iright + 1):
         for ilat in range(itop, ibottom + 1):
-            yield tile_template.format(**locals())
+            if ilon > 0 and ilat > 0:
+                yield tile_template.format(**locals())
 
 
 def srtm_ellip_tiles_names(left, bottom, right, top, tile_name_template='{slat}{slon}_wgs84.tif'):

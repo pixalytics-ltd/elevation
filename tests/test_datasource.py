@@ -28,6 +28,7 @@ def test_srtm1_tiles_names():
 
 def test_srtm3_tiles_names():
     assert next(datasource.srtm3_tiles_names(10.1, 44.9, 10.1, 44.9)).endswith('srtm_39_04.tif')
+    assert next(datasource.srtm3_tiles_names(25.50, 58.40, 27.67, 60.06)).endswith('srtm_42_01.tif')
     assert len(list(datasource.srtm3_tiles_names(9.9, 39.1, 15.1, 45.1))) == 9
 
 
