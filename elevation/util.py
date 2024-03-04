@@ -16,8 +16,13 @@
 
 import collections
 import os
+import sys
+import requests
 import subprocess
 from contextlib import contextmanager
+import wslPath
+import zipfile
+import glob
 
 import fasteners
 
@@ -84,6 +89,61 @@ def check_call_make(path, targets=(), variables=()):
     make_targets = ' '.join(targets)
     variables_items = collections.OrderedDict(variables).items()
     make_variables = ' '.join('%s="%s"' % (k.upper(), v) for k, v in variables_items)
-    cmd = 'make -C {path} {make_targets} {make_variables}'.format(**locals())
-    subprocess.check_call(cmd, shell=True)
+    if sys.platform != 'win32':
+        cmd = 'make -C {path} {make_targets} {make_variables}'.format(**locals())
+        subprocess.check_call(cmd, shell=True)
+    else:
+        if 'download' in make_targets:
+            cmd = []
+            for k, files in variables_items:
+                for v in files.split(" "):
+                    out_file = os.path.join(path,v)
+                    tfile = v.replace(".tif",".zip")
+                    out_zip = os.path.join(path,tfile)
+                    if not os.path.exists(out_file):
+                        url = r'https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/{}'.format(tfile)
+                        myfile = requests.get(url)
+                        open(out_zip, 'wb').write(myfile.content)
+                        with zipfile.ZipFile(out_zip, 'r') as zip_ref:
+                            zip_ref.extractall(path)
+                    print("Saved: {}".format(v))
+                    cmd.append(out_file)
+
+        elif 'all' in make_targets:
+            cmd = "wsl.exe gdalbuildvrt -q -overwrite {}/{}.vrt {}/*.tif".format(wslPath.to_posix(path),os.path.split(path)[1],wslPath.to_posix(path))
+            print("CMD: ",cmd)
+            subprocess.check_call(cmd, shell=True)
+
+        elif 'copy_vrt' in make_targets:
+            for k, id in variables_items:
+                cmd = "wsl.exe cp {}/{}.vrt {}/{}.{}.vrt".format(wslPath.to_posix(path),os.path.split(path)[1],wslPath.to_posix(path),os.path.split(path)[1],id)
+                print("CMD: ",cmd)
+                subprocess.check_call(cmd, shell=True)
+
+        elif 'clip' in make_targets:
+            for k, v in variables_items:
+                if 'run_id' in k:
+                    id = v
+                elif 'output' in k:
+                    output = v
+                else:
+                    projwin = v
+
+            vrt = "{}/{}.{}.vrt".format(wslPath.to_posix(path),os.path.split(path)[1],id)
+            cmd = "wsl.exe gdal_translate -q -co TILED=YES -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 -projwin {} {} {}".format(projwin,vrt,wslPath.to_posix(output))
+            print("CMD: ",cmd)
+            subprocess.check_call(cmd, shell=True)
+
+        elif 'clean' in make_targets:
+            searchstr = os.path.join(path.replace("M1","M*"),'*.vrt')
+            vrts = glob.glob(searchstr)
+            print("Deleting {} files in {}".format(len(vrts),searchstr))
+            for vrt in vrts:
+                os.remove(vrt)
+            cmd = ""
+        else:
+            wsl_path = wslPath.to_posix(path)
+            cmd = 'wsl.exe make -C {} {} {}'.format(wsl_path,make_targets,make_variables)
+            print("CMD: ",cmd)
+            subprocess.check_call(cmd, shell=True)
     return cmd
