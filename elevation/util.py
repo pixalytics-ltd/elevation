@@ -111,13 +111,13 @@ def check_call_make(path, targets=(), variables=()):
 
         elif 'all' in make_targets:
             cmd = "wsl.exe gdalbuildvrt -q -overwrite {}/{}.vrt {}/*.tif".format(wslPath.to_posix(path),os.path.split(path)[1],wslPath.to_posix(path))
-            print("CMD: ",cmd)
+            #print("CMD: ",cmd)
             subprocess.check_call(cmd, shell=True)
 
         elif 'copy_vrt' in make_targets:
             for k, id in variables_items:
                 cmd = "wsl.exe cp {}/{}.vrt {}/{}.{}.vrt".format(wslPath.to_posix(path),os.path.split(path)[1],wslPath.to_posix(path),os.path.split(path)[1],id)
-                print("CMD: ",cmd)
+                #print("CMD: ",cmd)
                 subprocess.check_call(cmd, shell=True)
 
         elif 'clip' in make_targets:
@@ -131,19 +131,19 @@ def check_call_make(path, targets=(), variables=()):
 
             vrt = "{}/{}.{}.vrt".format(wslPath.to_posix(path),os.path.split(path)[1],id)
             cmd = "wsl.exe gdal_translate -q -co TILED=YES -co COMPRESS=DEFLATE -co ZLEVEL=9 -co PREDICTOR=2 -projwin {} {} {}".format(projwin,vrt,wslPath.to_posix(output))
-            print("CMD: ",cmd)
+            #print("CMD: ",cmd)
             subprocess.check_call(cmd, shell=True)
 
         elif 'clean' in make_targets:
             searchstr = os.path.join(path.replace("M1","M*"),'*.vrt')
             vrts = glob.glob(searchstr)
-            print("Deleting {} files in {}".format(len(vrts),searchstr))
+            #print("Deleting {} files in {}".format(len(vrts),searchstr))
             for vrt in vrts:
                 os.remove(vrt)
             cmd = ""
         else:
             wsl_path = wslPath.to_posix(path)
             cmd = 'wsl.exe make -C {} {} {}'.format(wsl_path,make_targets,make_variables)
-            print("CMD: ",cmd)
+            #print("CMD: ",cmd)
             subprocess.check_call(cmd, shell=True)
     return cmd
