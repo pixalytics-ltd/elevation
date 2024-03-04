@@ -106,7 +106,7 @@ def check_call_make(path, targets=(), variables=()):
                         open(out_zip, 'wb').write(myfile.content)
                         with zipfile.ZipFile(out_zip, 'r') as zip_ref:
                             zip_ref.extractall(path)
-                    print("Saved: {}".format(v))
+                    #print("Saved: {}".format(v))
                     cmd.append(out_file)
 
         elif 'all' in make_targets:
