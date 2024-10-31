@@ -100,14 +100,21 @@ def check_call_make(path, targets=(), variables=()):
                     out_file = os.path.join(path,v)
                     tfile = v.replace(".tif",".zip")
                     out_zip = os.path.join(path,tfile)
+                    exists = True
                     if not os.path.exists(out_file):
                         url = r'https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/{}'.format(tfile)
                         myfile = requests.get(url)
                         open(out_zip, 'wb').write(myfile.content)
-                        with zipfile.ZipFile(out_zip, 'r') as zip_ref:
-                            zip_ref.extractall(path)
+                        # SAM added exception trap
+                        try:
+                            with zipfile.ZipFile(out_zip, 'r') as zip_ref:
+                                zip_ref.extractall(path)
+                        except:
+                            print("Failed to extract {}".format(out_zip))
+                            exists = False
                     #print("Saved: {}".format(v))
-                    cmd.append(out_file)
+                    if exists:
+                        cmd.append(out_file)
 
         elif 'all' in make_targets:
             cmd = "wsl.exe gdalbuildvrt -q -overwrite {}/{}.vrt {}/*.tif".format(wslPath.to_posix(path),os.path.split(path)[1],wslPath.to_posix(path))

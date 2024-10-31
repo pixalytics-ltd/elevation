@@ -178,6 +178,12 @@ def seed(cache_dir=CACHE_DIR, product=DEFAULT_PRODUCT, bounds=None, max_download
     """
     datasource_root, spec = ensure_setup(cache_dir, product)
     ensure_tiles_names = list(spec['tile_names'](*bounds))
+    print("{} DEM files to download to: {}".format(len(ensure_tiles_names), cache_dir))
+    # SAM FIXME: emergency hack to enforce the no-bulk-download policy
+    if len(ensure_tiles_names) == 0:
+        raise RuntimeError(
+            "No tiles to download."
+        )
     # FIXME: emergency hack to enforce the no-bulk-download policy
     if len(ensure_tiles_names) > max_download_tiles:
         raise RuntimeError(
